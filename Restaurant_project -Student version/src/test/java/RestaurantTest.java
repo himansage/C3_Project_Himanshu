@@ -2,6 +2,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.spy;
@@ -60,6 +62,27 @@ class RestaurantTest {
     public void removing_item_that_does_not_exist_should_throw_exception() {
         assertThrows(itemNotFoundException.class,
                 ()->restaurant.removeFromMenu("French fries"));
+    }
+    @Test
+    public void calling_getOrderValue_with_2_items_should_return_proper_order_value() {
+        // Not using menu items added in @BeforeAll to avoid possible future issues due to dependency
+        List<String> itemNames = Arrays.asList("Apple Pie", "Cheese chilly toast");
+        int[] itemPrices = { 149, 99 };
+        restaurant.addToMenu(itemNames.get(0), itemPrices[0]);
+        restaurant.addToMenu(itemNames.get(1), itemPrices[1]);
+        int expectedOrderValue = itemPrices[0] + itemPrices[1];
+
+        int orderValue = restaurant.getOrderValue(itemNames.get(0), itemNames.get(1));
+
+        assertEquals(expectedOrderValue, orderValue);
+    }
+    @Test
+    public void calling_getOrderValue_without_arguments_should_return_0() {
+        int expectedOrderValue = 0;
+
+        int orderValue = restaurant.getOrderValue();
+
+        assertEquals(expectedOrderValue, orderValue);
     }
     //<<<<<<<<<<<<<<<<<<<<<<<MENU>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
